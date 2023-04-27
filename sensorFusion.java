@@ -93,6 +93,7 @@ public class KalmanFilter  {
 
         robotXStates = new states(0, 0, 0);
         robotYStates = new states(0, 0, 0);
+        
         robotRotationStates = new states(0, 0, 0);
         calibrateGyro();
     }
@@ -110,14 +111,7 @@ public class KalmanFilter  {
     }
 
     private double valueWrapAround(double num, double divider){
-        double ratio = num / divider;
-        if (Math.abs(ratio) >= 1){
-            ratio -= Math.signum(ratio) * Math.round(ratio);
-            if (Math.signum(ratio) * ratio < 0){
-                ratio += Math.signum(ratio) * 1;
-            }
-        }
-        return ratio * num;
+        return ((num / divider) % 1) * num;
     }
 
     private void lerpAccel(){
@@ -223,13 +217,13 @@ public class KalmanFilter  {
     }
     //easy no gravity hack
     public double getXAccel() {
-        return 9.81 * (accelXStates.getPosition() - Math.sin(Math.toRadians(getXAngle())) * Math.cos(Math.toRadians(getXAngle())) * 1);
+        return 9.81 * (accelXStates.getPosition() - Math.sin(Math.toRadians(getXAngle())) * Math.cos(Math.toRadians(getYAngle())) * 1);
     }
     public double getYAccel() {
-        return 9.81 * (accelYStates.getPosition() - Math.cos(Math.toRadians(getXAngle())) * Math.sin(Math.toRadians(getXAngle())) * 1);
+        return 9.81 * (accelYStates.getPosition() - Math.cos(Math.toRadians(getXAngle())) * Math.sin(Math.toRadians(getYAngle())) * 1);
     }
     public double getZAccel() {
-        return 9.81 * (accelZStates.getPosition() - Math.cos(Math.toRadians(getXAngle())) * Math.cos(Math.toRadians(getXAngle())) * 1);
+        return 9.81 * (accelZStates.getPosition() - Math.cos(Math.toRadians(getXAngle())) * Math.cos(Math.toRadians(getYAngle())) * 1);
     }
 
     public double getFieldXAccel() {
